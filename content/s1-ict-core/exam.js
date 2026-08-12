@@ -171,7 +171,7 @@
   },
 
   {
-    q: "How should the neckline break of a head &amp; shoulders be treated?",
+    q: "How should the neckline break of a head & shoulders be treated?",
     o: ["As a turtle soup on the sell stops", "As the signal to sell the breakdown", "As the end of the current trend", "As a measured move to the downside"], a: 0,
     e: "Retail is taught to sell when the neckline breaks; instead treat the break as a stop-raid on the sell stops below it — the ideal spot to look for the opposite side. (Month 3, Lesson 8)"
   },

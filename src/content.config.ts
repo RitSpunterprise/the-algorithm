@@ -36,6 +36,31 @@ const DATA_SLUG_RE = /data-slug="([^"]+)"/;
 const WRAP_OPEN_RE = /^\s*<section\b[^>]*>/;
 const WRAP_CLOSE_RE = /<\/section>\s*$/;
 
+const HTML_ENTITY_RE = /&(amp|lt|gt|quot|#39|apos);/g;
+const HTML_ENTITY_MAP: Record<string, string> = {
+  "#39": "'",
+  amp: "&",
+  apos: "'",
+  gt: ">",
+  lt: "<",
+  quot: '"',
+};
+
+/**
+ * Decode the small set of HTML entities used in lesson meta. The title /
+ * crumb / desc regexes extract raw markup (a DOM getAttribute() would have
+ * decoded these), and the meta is later rendered as plain text by Astro and
+ * React — so &amp; would otherwise show up literally in the sidebar, page
+ * titles and the h1. Body segments are NOT decoded: they are set:html'd and
+ * must keep their escaped entities.
+ */
+function decodeEntities(s: string): string {
+  return s.replace(
+    HTML_ENTITY_RE,
+    (m, name: string) => HTML_ENTITY_MAP[name] ?? m
+  );
+}
+
 function jsEval(code: string): unknown {
   // Tolerate a trailing `;` — some source files were saved by a formatter
   // that puts one before the closing brace ({ ...; }) or at the very end.
@@ -273,9 +298,9 @@ function makeLesson(
   const raw = readFileSync(htmlPath, "utf8");
 
   const id = LESSON_ID_RE.exec(raw)?.[1] ?? "";
-  const title = DATA_TITLE_RE.exec(raw)?.[1] ?? "";
-  const desc = DESC_RE.exec(raw)?.[1]?.trim() ?? "";
-  const crumb = CRUMB_RE.exec(raw)?.[1]?.trim() ?? "";
+  const title = decodeEntities(DATA_TITLE_RE.exec(raw)?.[1] ?? "");
+  const desc = decodeEntities(DESC_RE.exec(raw)?.[1]?.trim() ?? "");
+  const crumb = decodeEntities(CRUMB_RE.exec(raw)?.[1]?.trim() ?? "");
 
   // the source wraps the lesson in a <section class="lesson">; the page
   // renders its own <article class="lesson">, so unwrap before splitting

@@ -8,6 +8,14 @@ agents update the `Unreleased` section before reporting work as done.
 
 ## Unreleased
 
+### Fixed
+- Fixed literal `&amp;` showing in the sidebar, page titles, lesson headings and
+  footer labels: lesson metadata (`data-title`, `crumb`, `desc`) is now
+  HTML-entity-decoded by the content loader before being rendered as text.
+- Normalized `&amp;` to `&` in the `data-title` attributes of 18 Section 2
+  lessons and in quiz/exam question strings (`head & shoulders`, `S&P`), so
+  ampersands display correctly in quizzes and the final exam.
+
 ### Added
 - Added a Contributors section to the README with GitHub avatar links for each
   contributor.
